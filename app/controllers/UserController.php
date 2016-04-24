@@ -1,4 +1,5 @@
 <?php
+require_once "index.php";
 class UserController {
 	private $slimApp;
 	private $model;
@@ -6,8 +7,17 @@ class UserController {
 	public function __construct($model, $action = null, $slimApp, $parameteres = null) {
 		$this->model = $model;
 		$this->slimApp = $slimApp;
-		$this->requestBody = json_decode ( $this->slimApp->request->getBody (), true ); // this must contain the representation of the new user
-		
+		//simplexml_load_string
+		$body = $this->slimApp->request->getBody ();
+		//$this->requestBody = json_decode ( $this->slimApp->request->getBody (), true ); // this must contain the representation of the new user
+
+		//if statement
+		if($body == RESPONSE_FORMAT_XML)
+			$this->requestBody = simplexml_load_string ( $this->slimApp->request->getBody (), true );
+		else
+			$this->requestBody = json_decode ( $this->slimApp->request->getBody (), true );
+
+		// end if/ else statement
 		if (! empty ( $parameteres ["id"] ))
 			$id = $parameteres ["id"];
 		

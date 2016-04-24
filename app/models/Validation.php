@@ -6,9 +6,14 @@ class Validation {
 	 * @return boolean indicating whether it is a valid email or not
 	 */
 	public function isEmailValid($emailStr){
-		$regex = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/i";
-		if(!preg_match($regex, $emailStr)) return (false);
-		else return (true);
+		
+		if (!filter_var($emailStr, FILTER_VALIDATE_EMAIL)) {
+			 return (false);
+		}
+		else{
+			return (true);
+		}
+		
 	}
 	/**
 	 * @param $number - the input number

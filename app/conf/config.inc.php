@@ -15,6 +15,7 @@ define("ACTION_CREATE_USER", 55);
 define("ACTION_UPDATE_USER", 66);
 define("ACTION_DELETE_USER", 77);
 define("ACTION_SEARCH_USERS", 88);
+define("ACTION_AUTHENTICATE_USER", 99);
 
 /* actions for the FILMS REST resource */
 define("ACTION_GET_FILM", 33);
@@ -74,5 +75,9 @@ define("TABLE_USER_PASSWORD_LENGTH", 40);
 
 /* representation of a new user in the DB */
 define("TABLE_FILM_NAME_LENGTH", 25);
+
+// format type - content type
+define("RESPONSE_FORMAT_JSON", "application/json");
+define("RESPONSE_FORMAT_XML", "application/xml");
 
 ?>

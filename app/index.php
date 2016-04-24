@@ -6,7 +6,33 @@ $app = new \Slim\Slim (); // slim run-time object
 
 require_once "conf/config.inc.php";
 
-$app->map ( "/users(/:id)", function ($userID = null) use($app) {
+
+// route middleware for simple API authentication
+function authenticate(\Slim\Route $route) {
+    $app = \Slim\Slim::getInstance();
+	$action = ACTION_AUTHENTICATE_USER;
+	$parameters["username"] = $app->request->headers->get("username");
+	$parameters["password"] = $app->request->headers->get("password");
+	$mvc = new loadRunMVCComponents ( "AuthenticationModel", "AuthenticationController", "jsonView", $action, $app, $parameters );
+   if ($mvc->model->apiResponse === true) {
+		$app->halt(401);
+    }
+}
+
+function formatType($app) {
+	$viewType = $app->request->headers->get("Content-Type");
+	
+	if($viewType == RESPONSE_FORMAT_XML)
+		$viewType = "xmlView";
+	else
+		$viewType = "jsonView";
+	
+	return $viewType;
+}
+
+
+
+$app->map ( "/users(/:id)", "authenticate", function ($userID = null) use($app) {
 	
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
@@ -32,10 +58,14 @@ $app->map ( "/users(/:id)", function ($userID = null) use($app) {
 			default :
 		}
 	}
-	return new loadRunMVCComponents ( "UserModel", "UserController", "jsonView", $action, $app, $parameters );
+
+	$viewType = formatType($app);
+	return new loadRunMVCComponents ( "UserModel", "UserController", $viewType, $action, $app, $parameters );
 } )->via ( "GET", "POST", "PUT", "DELETE" );
 
-$app->map ( "/films(/:id)", function ($filmsID = null) use($app) {
+
+
+$app->map ( "/films(/:id)", "authenticate", function ($filmsID = null) use($app) {
 	$httpMethod = $app->request->getMethod ();
 	$action = null;
 	$parameters ["id"] = $filmsID; // prepare parameters to be passed to the controller (example: ID)

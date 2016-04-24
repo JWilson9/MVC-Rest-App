@@ -79,5 +79,21 @@ class UsersDAO {
 		
 		return ($rows);
 	}
+
+	public function authenticate($username, $password) {
+		$sql = "SELECT * ";
+		$sql .= "FROM users ";
+		$sql .= "WHERE users.email=? ";
+		$sql .= "AND users.password=? ";
+		
+		$stmt = $this->dbManager->prepareQuery ( $sql );
+		$this->dbManager->bindValue ( $stmt, 1, $username, $this->dbManager->STRING_TYPE );
+		// MAYBE INT TYPE NOT SURE, 
+		$this->dbManager->bindValue ( $stmt, 2, $password, $this->dbManager->STRING_TYPE );
+		$this->dbManager->executeQuery ( $stmt );
+		$rows = $this->dbManager->fetchResults ( $stmt );
+		return ($rows);
+	}
+
 }
 ?>

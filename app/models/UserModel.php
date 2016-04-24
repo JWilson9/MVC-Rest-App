@@ -82,6 +82,15 @@ class UserModel {
 		// reuturn false if the user has not been updated, name too big for example
 		return (false);
 	}
+
+	public function validateUser($username, $password) {
+		if(!empty ($username) && !empty ($password))
+			if($this->UsersDAO->validate($username, $password))
+				return true;
+		return false;
+	}
+
+	
 	public function __destruct() {
 		$this->UsersDAO = null;
 		$this->dbmanager->closeConnection ();
